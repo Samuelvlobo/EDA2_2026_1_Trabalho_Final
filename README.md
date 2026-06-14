@@ -3,14 +3,20 @@
 Este projeto consiste em um Sistema de Recomendação de Textos desenvolvido para a disciplina de Estruturas de Dados 2. O sistema utiliza um grafo bipartido (Usuários-Textos) e projeção de grafos para sugerir novos conteúdos relevantes.
 
 ## 📋 Domínio Escolhido
-* **Área de Aplicação:** [Definir Ex: Recomendação de Artigos Médicos / Notícias de Esporte]
+
+* **Área de Aplicação:** Séries de televisão
 * **Objetivo:** Resolver o problema de [Ex: sobrecarga de informação para pesquisadores médicos].
 
 ## 🛠️ Tecnologias e Estruturas de Dados
-* **Linguagem:** [Python / C++ / C]
+
+* **Linguagem:** Python
 * **Estruturas Principais:** Grafo Bipartido (Implementação Própria) e [Tabela Hash / Árvore Binária - Escolher uma].
 
 ## 👥 Integrantes do Grupo
-* Integrante 1 - GitHub: @username1 (Contribuição: ...)
-* Integrante 2 - GitHub: @username2 (Contribuição: ...)
-* Integrante 3 - GitHub: @username3 (Contribuição: ...)
+
+* Arthur Mendes Borges - GitHub: [@artmendess](https://github.com/artmendess) (Contribuição: ...)
+* Davi Marques do Egito Coelho - GitHub: [@daviegito](https://github.com/daviegito) (Contribuição: ...)
+* João Victor Mello da Costa Bruno - GitHub: [@Chaotzuu](https://github.com/Chaotzuu) (Contribuição: ...)
+* Jorge Henrique Lessa de Oliveira - GitHub: [@SirJorgito](https://github.com/SirJorgito) (Contribuição: ...)
+* Samuel Rodrigues Viana Lobo - GitHub: [@Samuelvlobo](https://github.com/Samuelvlobo) (Contribuição: ...)
+
