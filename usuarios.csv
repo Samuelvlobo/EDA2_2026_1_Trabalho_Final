@@ -1,84 +1,84 @@
-usuario,titulo,peso_interacao
-Ana,Breaking Bad,5
-Ana,The Office,4
-Ana,Stranger Things,5
-Ana,Dark,2
-Bruno,Game of Thrones,5
-Bruno,Better Call Saul,4
-Bruno,The Boys,5
-Bruno,Black Mirror,3
-Carla,Friends,5
-Carla,The Crown,4
-Carla,House of Cards,3
-Carla,The Last of Us,5
-Diego,Sherlock,5
-Diego,True Detective,4
-Diego,Dexter,5
-Diego,Mindhunter,2
-Fernanda,The Wire,5
-Fernanda,The Sopranos,5
-Fernanda,Peaky Blinders,4
-Fernanda,Narcos,3
-Gabriel,The Expanse,5
-Gabriel,Westworld,4
-Gabriel,Battlestar Galactica,5
-Gabriel,Fringe,2
-Helena,Parks and Recreation,5
-Helena,Brooklyn Nine-Nine,5
-Helena,Community,4
-Helena,Modern Family,3
-Igor,The Walking Dead,3
-Igor,The Handmaid's Tale,5
-Igor,The Witcher,4
-Igor,The Mandalorian,5
-Julia,Lucifer,2
-Julia,Supernatural,5
-Julia,The Flash,4
-Julia,Arrow,3
-Kai,Arcane,5
-Kai,Death Note,5
-Kai,Attack on Titan,5
-Kai,One Piece,4
-Laura,Seinfeld,4
-Laura,How I Met Your Mother,5
-Laura,The Big Bang Theory,3
-Laura,Silicon Valley,2
-Marcos,The Americans,3
-Marcos,24,5
-Marcos,Prison Break,5
-Marcos,Fargo,4
-Nina,The Crown,5
-Nina,Mad Men,4
-Nina,Succession,5
-Nina,House of the Dragon,2
-Otavio,BoJack Horseman,3
-Otavio,Rick and Morty,5
-Otavio,The Boys,4
-Otavio,The Last of Us,2
-Patricia,Lost,3
-Patricia,Fringe,5
-Patricia,Dark,5
-Patricia,Black Mirror,4
-Rafael,Vikings,5
-Rafael,Game of Thrones,5
-Rafael,Peaky Blinders,4
-Rafael,The Wire,3
-Sofia,Friends,5
-Sofia,Community,4
-Sofia,Parks and Recreation,3
-Sofia,Brooklyn Nine-Nine,5
-Tiago,Daredevil,5
-Tiago,The Punisher,3
-Tiago,Arrow,4
-Tiago,The Flash,5
-Ana,Lost,1
-Bruno,The Handmaid's Tale,1
-Carla,Westworld,2
-Diego,The Expanse,1
-Fernanda,The Last of Us,2
-Gabriel,The Walking Dead,1
-Helena,The Witcher,2
-Igor,Black Mirror,1
-Julia,Game of Thrones,2
-Kai,The Office,1
-Laura,The Mandalorian,2
+usuario,titulo
+Ana,Breaking Bad
+Ana,The Office
+Ana,Stranger Things
+Ana,Dark
+Ana,Lost
+Bruno,Game of Thrones
+Bruno,Better Call Saul
+Bruno,The Boys
+Bruno,Black Mirror
+Bruno,The Handmaid's Tale
+Carla,Friends
+Carla,The Crown
+Carla,House of Cards
+Carla,The Last of Us
+Carla,Westworld
+Diego,Sherlock
+Diego,True Detective
+Diego,Dexter
+Diego,Mindhunter
+Diego,The Expanse
+Fernanda,The Wire
+Fernanda,The Sopranos
+Fernanda,Peaky Blinders
+Fernanda,Narcos
+Fernanda,The Last of Us
+Gabriel,The Expanse
+Gabriel,Westworld
+Gabriel,Battlestar Galactica
+Gabriel,Fringe
+Gabriel,The Walking Dead
+Helena,Parks and Recreation
+Helena,Brooklyn Nine-Nine
+Helena,Community
+Helena,Modern Family
+Helena,The Witcher
+Igor,The Walking Dead
+Igor,The Handmaid's Tale
+Igor,The Witcher
+Igor,The Mandalorian
+Igor,Black Mirror
+Julia,Lucifer
+Julia,Supernatural
+Julia,The Flash
+Julia,Arrow
+Julia,Game of Thrones
+Kai,Arcane
+Kai,Death Note
+Kai,Attack on Titan
+Kai,One Piece
+Kai,The Office
+Laura,Seinfeld
+Laura,How I Met Your Mother
+Laura,The Big Bang Theory
+Laura,Silicon Valley
+Laura,The Mandalorian
+Marcos,The Americans
+Marcos,24
+Marcos,Prison Break
+Marcos,Fargo
+Nina,The Crown
+Nina,Mad Men
+Nina,Succession
+Nina,House of the Dragon
+Otavio,BoJack Horseman
+Otavio,Rick and Morty
+Otavio,The Boys
+Otavio,The Last of Us
+Patricia,Lost
+Patricia,Fringe
+Patricia,Dark
+Patricia,Black Mirror
+Rafael,Vikings
+Rafael,Game of Thrones
+Rafael,Peaky Blinders
+Rafael,The Wire
+Sofia,Friends
+Sofia,Community
+Sofia,Parks and Recreation
+Sofia,Brooklyn Nine-Nine
+Tiago,Daredevil
+Tiago,The Punisher
+Tiago,Arrow
+Tiago,The Flash
