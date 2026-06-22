@@ -11,7 +11,7 @@ from flask_cors import CORS
 
 # Importa as estruturas de dados criadas manualmente
 from meu_heap import MaxHeap
-from meu_grafo import GrafoBipartido
+from meu_grafo import GrafoBipartido, GrafoSimilaridadeTextual
 
 app = Flask(__name__)
 # Habilita o CORS para permitir requisições do front-end local (index.html)
@@ -20,6 +20,7 @@ CORS(app)
 # Instancia as estruturas globais
 heap_populares = MaxHeap()
 grafo_recomendacao = GrafoBipartido()
+meta_keywords = {} # Cache global para NLP e Frontend
 
 def carregar_dados():
     """
@@ -31,25 +32,41 @@ def carregar_dados():
     
     print("Iniciando a carga de dados na memória...")
 
-    # 1. LER E POPULAR FILMES NO HEAP E NO GRAFO
+    # 1. LER E POPULAR FILMES NO HEAP E NOS GRAFOS
     caminho_filmes = os.path.join(data_dir, 'filmes.csv')
     if os.path.exists(caminho_filmes):
         df_filmes = pd.read_csv(caminho_filmes)
+        
+        dict_keywords = {}
         for _, row in df_filmes.iterrows():
             id_filme = int(row['id_filme'])
             titulo = row['titulo']
-            popularidade = int(row['popularidade'])
+            # Trata N/A ou NaN lidos pelo pandas transformando em string
+            palavras_chave = str(row.get('palavras_chave', ''))
             
             # Adiciona o nó do filme no Grafo (Conjunto V)
             grafo_recomendacao.adicionar_filme(id_filme, titulo)
+            dict_keywords[id_filme] = palavras_chave
+            meta_keywords[id_filme] = palavras_chave
+
+        print("-> Construindo Grafo de Similaridade Textual (NLP)...")
+        grafo_nlp = GrafoSimilaridadeTextual()
+        grafo_nlp.construir_grafo(dict_keywords)
+        centralidade = grafo_nlp.calcular_centralidade()
+            
+        for _, row in df_filmes.iterrows():
+            id_filme = int(row['id_filme'])
+            titulo = row['titulo']
+            peso_nlp = centralidade.get(id_filme, 0)
             
             # Insere no Max-Heap (a chave de ordenação no código do meu_heap.py é 'popularidade')
+            # Agora estamos substituindo pela centralidade do NLP!
             heap_populares.inserir({
                 'id': id_filme,
                 'titulo': titulo,
-                'popularidade': popularidade
+                'popularidade': peso_nlp
             })
-        print(f"-> {len(df_filmes)} Filmes carregados no Heap e no Grafo.")
+        print(f"-> {len(df_filmes)} Filmes carregados no Heap e nos Grafos.")
 
     # 2. LER E POPULAR UTILIZADORES NO GRAFO
     caminho_utilizadores = os.path.join(data_dir, 'usuarios.csv')
@@ -86,16 +103,20 @@ def get_populares():
     top_5 = []
     
     # Extrai (remove) os maiores da raiz um por um
-    for _ in range(5):
+    for _ in range(15):
         if heap_populares.tamanho() > 0:
             filme = heap_populares.extrair_max()
             if filme:
-                top_5.append(filme)
+                # Criamos um copy raso para nao poluir o heap com palavras_chave
+                filme_resposta = filme.copy()
+                filme_resposta['palavras_chave'] = meta_keywords.get(filme['id'], '')
+                top_5.append(filme_resposta)
                 
     # Como extrair_max REMOVE os itens da árvore, precisamos reinseri-los
-    # para que a próxima requisição também consiga vê-los
+    # usando os objetos originais do heap (sem as palavras_chave injetadas)
     for filme in top_5:
-        heap_populares.inserir(filme)
+        original = {'id': filme['id'], 'titulo': filme['titulo'], 'popularidade': filme['popularidade']}
+        heap_populares.inserir(original)
         
     # Retorna o JSON para o frontend
     return jsonify({
@@ -109,15 +130,15 @@ def get_recomendacoes(id_usuario):
     Dada a identificação do utilizador, projeta o Grafo Bipartido
     para sugerir filmes baseados em filtragem colaborativa.
     """
-    titulos_recomendados = grafo_recomendacao.recomendar_para_utilizador(id_usuario)
+    recomendacoes_tuplas = grafo_recomendacao.recomendar_para_utilizador(id_usuario)
     
-    # Prepara a formatação da resposta esperada pelo app.js (mock)
-    # Transformando a lista de strings em lista de dicionários com id (simulado) e titulo
+    # Prepara a formatação da resposta esperada pelo app.js
     recomendacoes_formatadas = []
-    for idx, titulo in enumerate(titulos_recomendados):
+    for f_id, titulo in recomendacoes_tuplas:
         recomendacoes_formatadas.append({
-            "id": 900 + idx,  # ID fictício só para não quebrar o frontend atual
-            "title": titulo
+            "id": f_id,
+            "title": titulo,
+            "palavras_chave": meta_keywords.get(f_id, '')
         })
         
     return jsonify({
@@ -137,10 +158,10 @@ def get_historico(id_usuario):
         "data": list(filmes_assistidos)
     })
 
-@app.route('/api/assistir', methods=['POST'])
-def post_assistir():
+@app.route('/api/toggle_assistido', methods=['POST'])
+def post_toggle_assistido():
     """
-    Regista que um utilizador assistiu a um filme.
+    Regista ou remove que um utilizador assistiu a um filme.
     Atualiza o Grafo na memória e persiste no ficheiro interacoes.csv.
     """
     dados = request.get_json()
@@ -150,25 +171,60 @@ def post_assistir():
     id_usuario = int(dados['id_usuario'])
     id_filme = int(dados['id_filme'])
     
-    # 1. Atualizar o Grafo na memória RAM
-    grafo_recomendacao.adicionar_aresta(id_usuario, id_filme)
-    
-    # 2. Fazer o append no CSV para persistência
     base_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..'))
     caminho_interacoes = os.path.join(base_dir, 'data', 'interacoes.csv')
     
+    filmes_do_usuario = grafo_recomendacao.adj_utilizadores.get(id_usuario, set())
+    
     try:
-        with open(caminho_interacoes, 'a', encoding='utf-8') as f:
-            # A base do script gerador colocou o CSV com cabeçalho id_usuario,id_filme,assistiu
-            # Então devemos manter 3 colunas se o CSV tiver 3 colunas, ou as 2 que o Python requer
-            # O gerador anterior criou: 'id_usuario', 'id_filme', 'assistiu'
-            f.write(f"{id_usuario},{id_filme},1\n")
+        if id_filme in filmes_do_usuario:
+            # 1. Remover do Grafo
+            grafo_recomendacao.remover_aresta(id_usuario, id_filme)
+            
+            # 2. Remover do CSV
+            df = pd.read_csv(caminho_interacoes)
+            # Filtra removendo a linha exata
+            df = df[~((df['id_usuario'] == id_usuario) & (df['id_filme'] == id_filme))]
+            df.to_csv(caminho_interacoes, index=False)
+            
+            return jsonify({"status": "removido", "message": "Aresta removida com sucesso!"})
+        else:
+            # 1. Adicionar no Grafo
+            grafo_recomendacao.adicionar_aresta(id_usuario, id_filme)
+            
+            # 2. Adicionar no CSV (append para ser mais rápido)
+            with open(caminho_interacoes, 'a', encoding='utf-8') as f:
+                f.write(f"{id_usuario},{id_filme},1\n")
+                
+            return jsonify({"status": "adicionado", "message": "Aresta adicionada com sucesso!"})
     except Exception as e:
-        return jsonify({"status": "error", "message": f"Erro ao salvar: {str(e)}"}), 500
+        return jsonify({"status": "error", "message": f"Erro ao processar: {str(e)}"}), 500
+
+@app.route('/api/buscar', methods=['GET'])
+def get_buscar():
+    """
+    Busca filmes pelo termo contido no título.
+    Retorna no máximo 10 resultados.
+    """
+    termo = request.args.get('q', '').lower().strip()
+    if not termo:
+        return jsonify({"status": "success", "data": []})
         
+    resultados = []
+    # Itera no dicionário meta_filmes na RAM O(N)
+    for id_filme, titulo in grafo_recomendacao.meta_filmes.items():
+        if termo in str(titulo).lower():
+            resultados.append({
+                "id": id_filme, 
+                "titulo": titulo,
+                "palavras_chave": meta_keywords.get(id_filme, '')
+            })
+            if len(resultados) == 10:
+                break
+                
     return jsonify({
         "status": "success",
-        "message": "Aresta adicionada e persistida com sucesso!"
+        "data": resultados
     })
 
 

@@ -46,6 +46,16 @@ class GrafoBipartido:
         self.adj_utilizadores[id_utilizador].add(id_filme)
         self.adj_filmes[id_filme].add(id_utilizador)
 
+    def remover_aresta(self, id_utilizador, id_filme):
+        """
+        Remove a ligação não-direcionada entre Utilizador e Filme,
+        usando .discard() para ser O(1) e não dar erro se não existir.
+        """
+        if id_utilizador in self.adj_utilizadores:
+            self.adj_utilizadores[id_utilizador].discard(id_filme)
+        if id_filme in self.adj_filmes:
+            self.adj_filmes[id_filme].discard(id_utilizador)
+
     def recomendar_para_utilizador(self, id_utilizador):
         """
         Projeção de Grafo Bipartido (Filtragem Colaborativa).
@@ -98,10 +108,57 @@ class GrafoBipartido:
             reverse=True        # Ordem decrescente (mais recomendados primeiro)
         )
 
-        # Seleciona os Top 3 melhores IDs de filmes
-        top_3_ids = [sugestao[0] for sugestao in sugestoes_ordenadas[:3]]
+        # Seleciona os Top 15 melhores IDs de filmes
+        top_15_ids = [sugestao[0] for sugestao in sugestoes_ordenadas[:15]]
         
-        # Converte os IDs nos nomes descritivos para melhor visualização (Retorna os Títulos)
-        top_3_titulos = [self.meta_filmes.get(f_id, f"Desconhecido ({f_id})") for f_id in top_3_ids]
+        # Converte os IDs num formato (ID, Título) para a API processar
+        top_15_tuplas = [(f_id, self.meta_filmes.get(f_id, f"Desconhecido ({f_id})")) for f_id in top_15_ids]
 
-        return top_3_titulos
+        return top_15_tuplas
+
+class GrafoSimilaridadeTextual:
+    def __init__(self):
+        # adjacencia[id_u] = {id_v: peso_intersecao}
+        self.adjacencia = {}
+
+    def construir_grafo(self, dicionario_filmes):
+        """
+        Recebe um dicionário {id_filme: "palavra1; palavra2"}
+        Constrói arestas baseadas na intersecção de palavras-chave.
+        """
+        filmes_sets = {}
+        for id_filme, texto_palavras in dicionario_filmes.items():
+            if isinstance(texto_palavras, str):
+                # Usando split e limpeza básica para pegar palavras relevantes
+                palavras = set([p.strip().lower() for p in texto_palavras.replace(';', ' ').split() if len(p.strip()) > 2])
+                filmes_sets[id_filme] = palavras
+            else:
+                filmes_sets[id_filme] = set()
+
+        ids = list(filmes_sets.keys())
+        
+        # Complexidade O(V^2), razoável para a carga inicial
+        for i in range(len(ids)):
+            id_u = ids[i]
+            if id_u not in self.adjacencia:
+                self.adjacencia[id_u] = {}
+                
+            for j in range(i + 1, len(ids)):
+                id_v = ids[j]
+                intersecao = filmes_sets[id_u].intersection(filmes_sets[id_v])
+                peso = len(intersecao)
+                
+                if peso > 0:
+                    self.adjacencia[id_u][id_v] = peso
+                    if id_v not in self.adjacencia:
+                        self.adjacencia[id_v] = {}
+                    self.adjacencia[id_v][id_u] = peso
+
+    def calcular_centralidade(self):
+        """
+        Retorna {id_filme: soma_dos_pesos_das_arestas}
+        """
+        pesos = {}
+        for id_filme, vizinhos in self.adjacencia.items():
+            pesos[id_filme] = sum(vizinhos.values())
+        return pesos

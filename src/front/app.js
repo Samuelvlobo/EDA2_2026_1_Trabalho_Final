@@ -20,6 +20,8 @@ document.addEventListener('DOMContentLoaded', () => {
     const sectionConnected = document.getElementById('section-connected');
     const rowConnected = document.getElementById('row-connected');
     const instructionMsg = document.getElementById('instruction-msg');
+    
+    const searchBar = document.getElementById('searchBar');
 
     // --- Render Functions ---
     function renderCards(container, data, isLoggedIn = false) {
@@ -34,21 +36,36 @@ document.addEventListener('DOMContentLoaded', () => {
             titleSpan.textContent = item.titulo || item.title;
             card.appendChild(titleSpan);
             
+            if (item.palavras_chave) {
+                const tagsContainer = document.createElement('div');
+                tagsContainer.className = 'tags-container';
+                
+                const tags = item.palavras_chave.split(';').map(t => t.trim()).filter(t => t.length > 0).slice(0, 3);
+                tags.forEach(tagText => {
+                    const tag = document.createElement('span');
+                    tag.className = 'tag';
+                    tag.textContent = tagText;
+                    tagsContainer.appendChild(tag);
+                });
+                card.appendChild(tagsContainer);
+            }
+            
             if (isLoggedIn) {
                 const btn = document.createElement('button');
                 btn.className = 'btn-assisti';
                 
                 if (userHistory.includes(idFilme)) {
-                    btn.textContent = 'Assistido';
-                    btn.disabled = true;
-                    btn.classList.add('disabled-btn');
+                    btn.textContent = '❌ Remover';
+                    btn.classList.add('btn-remover');
                 } else {
-                    btn.textContent = '✔️ Já Assisti';
-                    btn.addEventListener('click', async (e) => {
-                        e.stopPropagation();
-                        await handleAssistir(btn, idFilme);
-                    });
+                    btn.textContent = '✔️ Assistir';
+                    btn.classList.remove('btn-remover');
                 }
+                
+                btn.addEventListener('click', async (e) => {
+                    e.stopPropagation();
+                    await handleToggle(btn, idFilme);
+                });
                 card.appendChild(btn);
             }
             
@@ -162,31 +179,41 @@ document.addEventListener('DOMContentLoaded', () => {
         renderCards(rowPopular, popularesData, false);
     }
 
-    async function handleAssistir(btn, idFilme) {
+    async function handleToggle(btn, idFilme) {
         if (!currentUser) return;
 
-        // Atualização Otimista no UI
-        btn.textContent = 'Assistido';
         btn.disabled = true;
-        btn.classList.add('disabled-btn');
-        userHistory.push(idFilme);
         
         try {
-            const response = await fetch(`${API_BASE_URL}/assistir`, {
+            const response = await fetch(`${API_BASE_URL}/toggle_assistido`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ id_usuario: currentUser, id_filme: idFilme })
             });
             
             if (response.ok) {
-                // Atualiza a fileira de populares para espelhar o botão cinzento nela também (caso estivesse lá)
-                renderCards(rowPopular, popularesData, true);
+                const json = await response.json();
                 
-                // Recalcula o Grafo Bipartido e atualiza recomendações
+                if (json.status === 'adicionado') {
+                    userHistory.push(idFilme);
+                    btn.textContent = '❌ Remover';
+                    btn.classList.add('btn-remover');
+                } else if (json.status === 'removido') {
+                    userHistory = userHistory.filter(id => id !== idFilme);
+                    btn.textContent = '✔️ Assistir';
+                    btn.classList.remove('btn-remover');
+                }
+                btn.disabled = false;
+                
+                // Limpar HTML primeiro como pedido e engatilhar recalculo
+                rowConnected.innerHTML = '<p class="info-msg">O Grafo está a recalcular as afinidades...</p>';
                 buscarRecomendacoes();
+            } else {
+                btn.disabled = false;
             }
         } catch (error) {
             console.error('Erro ao registar interação:', error);
+            btn.disabled = false;
         }
     }
 
@@ -200,4 +227,23 @@ document.addEventListener('DOMContentLoaded', () => {
         if (e.key === 'Enter') handleLogin();
     });
     logoutBtn.addEventListener('click', handleLogout);
+    
+    if (searchBar) {
+        searchBar.addEventListener('input', async (e) => {
+            const termo = e.target.value.trim();
+            if (termo.length > 2) {
+                try {
+                    const response = await fetch(`${API_BASE_URL}/buscar?q=${termo}`);
+                    if (response.ok) {
+                        const json = await response.json();
+                        renderCards(rowPopular, json.data, !!currentUser);
+                    }
+                } catch (error) {
+                    console.error('Erro na busca:', error);
+                }
+            } else if (termo.length === 0) {
+                renderCards(rowPopular, popularesData, !!currentUser);
+            }
+        });
+    }
 });

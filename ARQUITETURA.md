@@ -11,7 +11,7 @@ O nosso sistema não se baseia em dados aleatórios simples. Simulámos um cená
 *   **A Origem:** Começámos com um *dataset* massivo e real de filmes extraído do Kaggle (`dataset_bruto.csv`).
 *   **Limpeza (Pandas):** Utilizamos a biblioteca `pandas` num script isolado (`gerador_dados.py`) para filtrar as colunas de Título, Sinopse e Popularidade, e limpámos os valores nulos (NaN). Extraímos uma amostra reproduzível de 1000 filmes.
 *   **NLP e IA:** Para cada filme, lemos a sua Sinopse original em inglês e utilizamos Processamento de Linguagem Natural com o algoritmo **Rake-NLTK** para extrair as 5 palavras-chave mais relevantes. 
-*   **Arestas e Interações:** Para dar vida ao grafo, gerámos 50 utilizadores mockados e desenvolvemos um algoritmo que sorteia aleatoriamente entre 10 e 30 interações de visualização (`assistiu=1`) por utilizador com os filmes da base, exportando tudo para 3 ficheiros `CSV` na pasta `/data/`.
+*   **Arestas e Interações:** Para dar vida ao grafo, gerámos 50 usuários mockados e desenvolvemos um algoritmo que sorteia aleatoriamente entre 10 e 30 interações de visualização (`assistiu=1`) por usuário com os filmes da base, exportando tudo para 3 ficheiros `CSV` na pasta `/data/`.
 
 ---
 
@@ -29,12 +29,12 @@ Para este trabalho académico, o coração do back-end reside em duas estruturas
 
 ### B. Estrutura 2: Grafo Bipartido (`meu_grafo.py`)
 *   **Objetivo:** Obter a recomendação personalizada e inteligente de conteúdos baseados no gosto do Utilizador atual (Filtragem Colaborativa).
-*   **Implementação:** Lista de Adjacência em Memória RAM utilizando Dicionários e Conjuntos (Sets) em Python. Esta estrutura divide logicamente os Vértices em dois grupos estanques: *Utilizadores (U)* e *Filmes (V)*, sendo que as arestas só podem conectar um nó de U a um de V (uma interação).
+*   **Implementação:** Lista de Adjacência em Memória RAM utilizando Dicionários e Conjuntos (Sets) em Python. Esta estrutura divide logicamente os Vértices em dois grupos estanques: *Usuários (U)* e *Filmes (V)*, sendo que as arestas só podem conectar um nó de U a um de V (uma interação).
 *   **Filtragem Colaborativa (O Método de Recomendação):**
-    Quando queremos recomendar algo para o Tiago:
-    1. O algoritmo olha para a lista de filmes que o Tiago já viu (Arestas de $U_{tiago}$).
+    Quando queremos recomendar algo para o Usuário 1:
+    1. O algoritmo olha para a lista de filmes que o Usuário 1 já viu (Arestas de $U_{usuario1}$).
     2. Através desses filmes, ele viaja pelo grafo e descobre **quem mais** assistiu aos mesmos filmes (Vizinhança partilhada).
-    3. Ele analisa as arestas que saem dessa "vizinhança" para encontrar filmes que esses utilizadores viram, mas que o Tiago ainda não viu.
+    3. Ele analisa as arestas que saem dessa "vizinhança" para encontrar filmes que esses usuários viram, mas que o Usuário 1 ainda não viu.
     4. Ele acumula a pontuação por frequência de ocorrência e ordena o resultado final, gerando sugestões altamente precisas baseadas na projeção do grafo bipartite original.
 
 ---
@@ -45,7 +45,7 @@ Para que o Front-end consiga visualizar as Estruturas de Dados sem tocar nelas d
 
 1.  **Carga O(V+E):** Quando o `api.py` é inicializado, ele lê todo o CSV e monta as instâncias do Max-Heap e do Grafo Bipartido integralmente na memória RAM do servidor para velocidade ultra-rápida.
 2.  **Consulta (`GET`):** O JS Vanilla (`app.js`) envia requisições assíncronas para `/api/populares` (onde extraímos do Heap e devolvemos via JSON) e para `/api/recomendacoes/<id>` (onde consultamos o Grafo).
-3.  **Persistência (`POST`):** Quando o utilizador clica em "✔️ Já Assisti" no browser:
+3.  **Persistência (`POST`):** Quando o usuário clica em "✔️ Já Assisti" no browser:
     *   O Front-end envia um `POST /api/assistir` para o Flask.
     *   O Flask adiciona uma nova aresta no GrafoBipartido na RAM quase instantaneamente (em **$O(1)$** porque usamos sets).
     *   **Efeito Duradouro:** O Flask faz um `append` ('a') na última linha física do ficheiro `/data/interacoes.csv`. Isto garante a durabilidade dos dados, de forma que ao desligar o computador e religar amanhã, as interações do painel Front-end permanecerão registadas no Grafo!

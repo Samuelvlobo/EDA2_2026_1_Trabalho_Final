@@ -21,15 +21,19 @@
     </header>
 
     <main>
+        <section class="row search-section">
+            <input type="text" id="searchBar" placeholder="Pesquisar um filme...">
+        </section>
+
         <section class="row">
-            <h2>Filmes Mais Populares <span class="subtitle">(Estrutura no Back-end: Fila de Prioridade - Heap)</span></h2>
+            <h2>Em Destaque (Mais Conectados) <span class="subtitle">Estrutura: Max-Heap ordenado por Centralidade do Grafo de PLN</span></h2>
             <div class="carousel" id="row-popular">
                 <!-- Cards populados pelo JS -->
             </div>
         </section>
 
         <section class="row hidden auth-required" id="section-connected">
-            <h2>Filmes Conectados <span class="subtitle">(Estrutura no Back-end: Grafo Bipartido)</span></h2>
+            <h2>Filmes Conectados <span class="subtitle">Estrutura: Projeção de Filtragem Colaborativa (Grafo Bipartido)</span></h2>
             <div class="carousel" id="row-connected">
                 <p id="instruction-msg" class="info-msg">Clique em algum filme popular acima para vermos o que os usuários com gosto parecido estão assistindo.</p>
             </div>
