@@ -17,12 +17,10 @@ def carregar_interacoes(caminho):
 
             usuario = linha["usuario"]
             serie = linha["titulo"]
-            peso = int(linha["peso_interacao"])
 
             grafo.adicionar_interacao(
                 usuario,
                 serie,
-                peso
             )
 
     return grafo
