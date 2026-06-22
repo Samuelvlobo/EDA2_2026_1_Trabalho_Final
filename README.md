@@ -22,7 +22,7 @@ Para testar este MVP na sua máquina, siga os passos exatos abaixo:
 1. **Ativar o ambiente virtual**:
    - No **Linux/Mac**:
    ```bash
-   source venv/bin/activate
+   python -m venv venv/bin/activate
    ```
    - No **Windows**:
    ```bash
@@ -34,7 +34,8 @@ Para testar este MVP na sua máquina, siga os passos exatos abaixo:
    ```bash
    pip install -r requirements.txt
    ```
-   *(Nota: O NLTK precisa dos pacotes básicos de PLN. Se for a primeira vez, execute: `python -c "import nltk; nltk.download('stopwords'); nltk.download('punkt'); nltk.download('punkt_tab')" `)*
+   *Nota 1: talvez seja necessário fazer um override do pip, porque pode ser que o gerenciador de pacotes exija a instalação dos requisitos por ele ao invés do gerenciador pip. Basta executar: `pip install -r requirements.txt --break-system-packages`*
+   *Nota 2: O NLTK precisa dos pacotes básicos de PLN. Se for a primeira vez, execute: `python -c "import nltk; nltk.download('stopwords'); nltk.download('punkt'); nltk.download('punkt_tab')" `*
 
 3. **Iniciar o servidor (Back-end)**:
    Inicie a nossa API REST em Flask que vai carregar o Grafo e o Heap para a memória RAM:
