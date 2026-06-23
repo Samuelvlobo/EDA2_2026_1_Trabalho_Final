@@ -51,4 +51,4 @@ Para testar este MVP na sua máquina, siga os passos exatos abaixo:
    xdg-open src/front/index.html
    ```
 5. **Criar um usuário**
-   Basta designar um número de ID ao usuário e escolher os filmes que o usuário já assistiu. Desta forma, os filmes mais similares ao gosto do usuário aparecerão primeiro. Os usuários de 0 a 50 já tem gostos definidos. Para adicionar um usuário sem gosto pré-definido, basta designar um ID de número maior que 50.
+   Basta designar um número de ID ao usuário e escolher os filmes que o usuário já assistiu. Desta forma, os filmes mais similares ao gosto do usuário aparecerão primeiro. Os usuários de 0 a 50 já tem gostos definidos. Para adicionar um usuário sem gosto pré-definido, basta designar um ID de número maior que 50 no arquivo "usuarios.csv" localizado na pasta "data".
