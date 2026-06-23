@@ -56,11 +56,11 @@ Ordena os filmes pelo seu grau de centralidade no *Grafo Ponderado* em tempo *O(
 
 | Integrante                       | GitHub                                         | Contribuição |
 | -------------------------------- | ---------------------------------------------- | ------------ |
-| Arthur Mendes Borges             | [@artmendess](https://github.com/artmendess)   | ...          |
-| Davi Marques do Egito Coelho     | [@daviegito](https://github.com/daviegito)     | ...          |
-| João Victor Mello da Costa Bruno | [@Chaotzuu](https://github.com/Chaotzuu)       | Base da estrutura do código para a implementação dos grafos no sistema          |
-| Jorge Henrique Lessa de Oliveira | [@SirJorgito](https://github.com/SirJorgito)   | ...          |
-| Samuel Rodrigues Viana Lobo      | [@Samuelvlobo](https://github.com/Samuelvlobo) | ...          |
+| Arthur Mendes Borges             | [@artmendess](https://github.com/artmendess)   | Participação na definição e construção da estrutura do projeto, organização da arquitetura da solução e apoio na elaboração dos slides.          |
+| Davi Marques do Egito Coelho     | [@daviegito](https://github.com/daviegito)     | Participação na definição e construção da estrutura do projeto, organização da arquitetura da solução e apoio na elaboração da documentação técnica.          |
+| João Victor Mello da Costa Bruno | [@Chaotzuu](https://github.com/Chaotzuu)       | Participação na definição e construção da estrutura do projeto, organização da arquitetura da solução e apoio na elaboração da documentação técnica.         |
+| Jorge Henrique Lessa de Oliveira | [@SirJorgito](https://github.com/SirJorgito)   | Participação na definição e construção da estrutura do projeto, organização da arquitetura da solução e apoio na elaboração dos slides.          |
+| Samuel Rodrigues Viana Lobo      | [@Samuelvlobo](https://github.com/Samuelvlobo) | Participação na definição e construção da estrutura do projeto, organização da arquitetura da solução e apoio na elaboração da documentação técnica.          |
 
 ---
 
