@@ -1,19 +1,72 @@
-# Sistema de Recomendação Baseado em Grafos Bipartidos
+# 🎬 GrafoFlix: Sistema Híbrido de Recomendação de Filmes e Séries
 
-Este projeto consiste em um Sistema de Recomendação de Textos desenvolvido para a disciplina de Estruturas de Dados 2. O sistema utiliza um grafo bipartido (Usuários-Textos) e projeção de grafos para sugerir novos conteúdos relevantes.
+Este projeto consiste num *Motor de Recomendação* desenvolvido para a disciplina de *Algoritmos e Estruturas de Dados II*.
 
-## 📋 Domínio Escolhido
-* **Área de Aplicação:** [Definir Ex: Recomendação de Artigos Médicos / Notícias de Esporte]
-* **Objetivo:** Resolver o problema de [Ex: sobrecarga de informação para pesquisadores médicos].
+O sistema utiliza uma abordagem *híbrida, combinando **Processamento de Linguagem Natural (PLN)* e *Teoria dos Grafos* para sugerir conteúdos de forma *semântica e colaborativa*.
 
-## 🛠️ Tecnologias e Estruturas de Dados
-* **Linguagem:** [Python / C++ / C]
-* **Estruturas Principais:** Grafo Bipartido (Implementação Própria) e [Tabela Hash / Árvore Binária - Escolher uma].
+---
+
+## 🎯 Domínio Escolhido
+
+*Área de Aplicação:*
+Cinema e Televisão (Base de dados real de 1000 filmes do Kaggle).
+
+### Objetivos Principais
+
+### 1. Resolver o problema do Cold Start (Início Frio)
+
+Sugerir filmes relevantes para novos utilizadores através da análise de similaridade textual das sinopses.
+
+### 2. Filtragem Colaborativa
+
+Sugerir conteúdos com base nos padrões de visualização e gostos similares da comunidade de utilizadores.
+
+---
+
+## 🧠 Tecnologias e Estruturas de Dados
+
+### Linguagem e Stack
+
+* *Back-end:* Python + Flask
+* *Front-end:* Vanilla JavaScript, HTML e CSS
+
+### Processamento de Linguagem Natural (PLN)
+
+Extração de palavras-chave de sinopses reais utilizando o algoritmo *RAKE (Rapid Automatic Keyword Extraction)* com apoio da biblioteca *NLTK*.
+
+### Estruturas de Dados Implementadas
+
+#### Estrutura 1 — Grafo Ponderado de Similaridade Textual (Implementação Própria)
+
+Liga filmes entre si.
+
+O peso das arestas representa a intersecção de palavras-chave identificadas nas sinopses.
+
+#### Estrutura 2 — Grafo Bipartido (Implementação Própria)
+
+Modela as interações (*arestas) entre o conjunto de **Utilizadores* e o conjunto de *Filmes*.
+
+#### Estrutura 3 — Max-Heap / Fila de Prioridade (Implementação Própria)
+
+Ordena os filmes pelo seu grau de centralidade no *Grafo Ponderado* em tempo *O(log n), alimentando a vitrine de **Destaques* de forma eficiente.
+
+---
 
 ## 👥 Integrantes do Grupo
-* Integrante 1 - GitHub: @username1 (Contribuição: ...)
-* Integrante 2 - GitHub: @username2 (Contribuição: ...)
-* Integrante 3 - GitHub: @username3 (Contribuição: ...)
+
+| Integrante                       | GitHub                                         | Contribuição |
+| -------------------------------- | ---------------------------------------------- | ------------ |
+| Arthur Mendes Borges             | [@artmendess](https://github.com/artmendess)   | ...          |
+| Davi Marques do Egito Coelho     | [@daviegito](https://github.com/daviegito)     | ...          |
+| João Victor Mello da Costa Bruno | [@Chaotzuu](https://github.com/Chaotzuu)       | Base da estrutura do código para a implementação dos grafos no sistema          |
+| Jorge Henrique Lessa de Oliveira | [@SirJorgito](https://github.com/SirJorgito)   | ...          |
+| Samuel Rodrigues Viana Lobo      | [@Samuelvlobo](https://github.com/Samuelvlobo) | ...          |
+
+---
+
+## 📌 Resumo da Solução
+
+O *GrafoFlix* combina *recomendação baseada em conteúdo* e *filtragem colaborativa* utilizando estruturas de grafos implementadas manualmente, permitindo gerar recomendações relevantes tanto para *novos utilizadores* quanto para utilizadores com histórico de interação.
 
 ## ⚙️ Como executar o projeto localmente
 
@@ -50,3 +103,7 @@ Para testar este MVP na sua máquina, siga os passos exatos abaixo:
    # No Linux, basta rodar noutro terminal:
    xdg-open src/front/index.html
    ```
+5. **Criar um usuário**
+   Para adicionar um usuário ao sistema, basta designar um número de ID ao usuário e escolher os filmes que o usuário já assistiu. Desta forma, os filmes mais similares ao gosto do usuário aparecerão primeiro. Assim, os tipo de usuário que podem ser adicionado são dois:
+   Usuário com gosto pré-definido: para adicioná-lo, designe um ID de número menor ou igual a 50. Pois os usuários de 0 a 50 já tem gostos definidos.
+   Usuário sem gosto pré-definido: para adicioná-lo, designe um ID de número maior que 50. 
